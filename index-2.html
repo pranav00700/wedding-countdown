@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kavya & Pranav's Wedding</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;1,400&family=Cinzel:wght@400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #1c1008; color: #f0e6d0;
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh; display: flex; flex-direction: column;
+    align-items: center; padding: 36px 16px 60px; gap: 18px;
+  }
+  .widget {
+    text-align: center; padding: 36px 28px 28px;
+    border: 1px solid rgba(212,175,85,0.3); border-radius: 24px;
+    background: rgba(212,175,85,0.05); width: 100%; max-width: 380px;
+  }
+  .names { font-family: 'Cinzel', serif; font-size: 18px; letter-spacing: 0.18em; color: #e8c96a; margin-bottom: 4px; }
+  .subtitle { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 15px; color: rgba(232,201,106,0.55); margin-bottom: 28px; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+  .box { background: rgba(0,0,0,0.35); border: 1px solid rgba(212,175,85,0.2); border-radius: 16px; padding: 20px 10px 16px; }
+  .num { font-family: 'Cinzel', serif; font-size: 54px; line-height: 1; color: #e8c96a; }
+  .lbl { font-size: 10px; letter-spacing: 0.2em; color: rgba(232,201,106,0.45); margin-top: 8px; }
+  .time-row { display: flex; justify-content: center; gap: 4px; margin-top: 4px; }
+  .t { text-align: center; min-width: 52px; }
+  .tnum { font-family: 'Cinzel', serif; font-size: 24px; color: rgba(240,230,208,0.65); }
+  .tlbl { font-size: 9px; letter-spacing: 0.18em; color: rgba(232,201,106,0.35); margin-top: 2px; }
+  .sep { font-family: 'Cinzel', serif; font-size: 22px; color: rgba(212,175,85,0.2); margin-top: 2px; }
+  .total-days { margin-top: 20px; font-size: 13px; font-weight: 300; color: rgba(240,230,208,0.5); }
+  .total-days strong { font-family: 'Cinzel', serif; font-size: 16px; color: #e8c96a; font-weight: 400; }
+  .date-label { margin-top: 6px; font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 14px; color: rgba(232,201,106,0.35); }
+
+  .sync-status {
+    font-size: 10px; letter-spacing: 0.08em;
+    padding: 4px 12px; border-radius: 20px;
+    width: 100%; max-width: 380px; text-align: center;
+    color: rgba(240,230,208,0.3);
+  }
+  .sync-status.synced  { color: rgba(100,200,120,0.6); }
+  .sync-status.syncing { color: rgba(232,201,106,0.5); }
+  .sync-status.error   { color: rgba(220,100,100,0.6); }
+
+  .section { width: 100%; max-width: 380px; border-radius: 20px; padding: 22px 18px 18px; }
+  .section.kavya  { background: rgba(220,130,160,0.06); border: 1px solid rgba(220,130,160,0.22); }
+  .section.pranav { background: rgba(100,160,220,0.06); border: 1px solid rgba(100,160,220,0.22); }
+  .section.common { background: rgba(212,175,85,0.05);  border: 1px solid rgba(212,175,85,0.22); }
+  .section-header { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+  .section-icon { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
+  .kavya  .section-icon { background: rgba(220,130,160,0.15); }
+  .pranav .section-icon { background: rgba(100,160,220,0.15); }
+  .common .section-icon { background: rgba(212,175,85,0.12); }
+  .section-title { font-family: 'Cinzel', serif; font-size: 12px; letter-spacing: 0.18em; }
+  .kavya  .section-title { color: #e090aa; }
+  .pranav .section-title { color: #80b4e0; }
+  .common .section-title { color: #d4a840; }
+  .section-meta { font-size: 10px; font-weight: 300; color: rgba(240,230,208,0.3); margin-left: auto; }
+
+  .checklist { display: flex; flex-direction: column; gap: 6px; }
+  .item-wrap { display: flex; flex-direction: column; gap: 4px; }
+  .check-row {
+    display: flex; align-items: flex-start; gap: 10px;
+    border-radius: 10px; padding: 10px 12px;
+    background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.05);
+  }
+  .check-row.sub {
+    margin-left: 28px; background: rgba(0,0,0,0.12);
+    border-color: rgba(255,255,255,0.03); padding: 8px 12px;
+  }
+  .check-row.done-row { opacity: 0.38; }
+  .check-row input[type="checkbox"] {
+    appearance: none; width: 18px; height: 18px; min-width: 18px;
+    border-radius: 5px; flex-shrink: 0; cursor: pointer;
+    position: relative; margin-top: 2px;
+    border: 1.5px solid rgba(255,255,255,0.15);
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .check-row.sub input[type="checkbox"] { width: 15px; height: 15px; min-width: 15px; border-radius: 4px; }
+  .kavya  .check-row input[type="checkbox"]:checked { background: rgba(220,130,160,0.3); border-color: #e090aa; }
+  .pranav .check-row input[type="checkbox"]:checked { background: rgba(100,160,220,0.3); border-color: #80b4e0; }
+  .common .check-row input[type="checkbox"]:checked { background: rgba(212,175,85,0.25);  border-color: #d4a840; }
+  .check-row input[type="checkbox"]:checked::after {
+    content: '✓'; position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 11px; font-family: sans-serif; font-weight: 600;
+  }
+  .kavya  .check-row input[type="checkbox"]:checked::after { color: #e090aa; }
+  .pranav .check-row input[type="checkbox"]:checked::after { color: #80b4e0; }
+  .common .check-row input[type="checkbox"]:checked::after { color: #d4a840; }
+
+  .item-label {
+    flex: 1; font-size: 14px; font-weight: 300; color: #f0e6d0;
+    background: none; border: none; outline: none;
+    font-family: 'Inter', sans-serif; line-height: 1.5;
+    cursor: text; min-width: 0; padding: 0;
+    resize: none; overflow: hidden;
+    word-break: break-word; white-space: pre-wrap;
+  }
+  .item-label.done-text { text-decoration: line-through; text-decoration-color: rgba(240,230,208,0.25); color: rgba(240,230,208,0.5); }
+  .check-row.sub .item-label { font-size: 13px; }
+
+  .row-actions { display: flex; align-items: flex-start; gap: 4px; flex-shrink: 0; padding-top: 1px; }
+  .icon-btn {
+    background: none; border: none; color: rgba(240,230,208,0.15);
+    font-size: 14px; cursor: pointer; padding: 2px 3px; line-height: 1;
+    transition: color 0.2s; border-radius: 4px;
+  }
+  .icon-btn:hover { color: rgba(240,230,208,0.55); }
+
+  .add-row { display: flex; gap: 8px; margin-top: 12px; }
+  .add-row input {
+    flex: 1; background: rgba(0,0,0,0.25);
+    border: 1px solid rgba(255,255,255,0.08); border-radius: 10px;
+    color: #f0e6d0; font-family: 'Inter', sans-serif;
+    font-size: 13px; font-weight: 300; padding: 10px 14px; outline: none;
+    transition: border-color 0.2s;
+  }
+  .add-row input::placeholder { color: rgba(240,230,208,0.2); }
+  .kavya  .add-row input:focus { border-color: rgba(220,130,160,0.4); }
+  .pranav .add-row input:focus { border-color: rgba(100,160,220,0.4); }
+  .common .add-row input:focus { border-color: rgba(212,175,85,0.4); }
+  .add-btn {
+    width: 40px; height: 40px; border-radius: 10px; border: 1px solid;
+    font-size: 22px; cursor: pointer; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .kavya  .add-btn { background: rgba(220,130,160,0.1); border-color: rgba(220,130,160,0.3); color: #e090aa; }
+  .pranav .add-btn { background: rgba(100,160,220,0.1); border-color: rgba(100,160,220,0.3); color: #80b4e0; }
+  .common .add-btn { background: rgba(212,175,85,0.1);  border-color: rgba(212,175,85,0.3);  color: #d4a840; }
+</style>
+</head>
+<body>
+
+<div class="widget">
+  <div class="names">Kavya &amp; Pranav</div>
+  <div class="subtitle">are getting married</div>
+  <div class="grid">
+    <div class="box"><div class="num" id="months">--</div><div class="lbl">MONTHS</div></div>
+    <div class="box"><div class="num" id="days">--</div><div class="lbl">DAYS</div></div>
+  </div>
+  <div class="time-row">
+    <div class="t"><div class="tnum" id="hrs">--</div><div class="tlbl">HRS</div></div>
+    <div class="sep">:</div>
+    <div class="t"><div class="tnum" id="mins">--</div><div class="tlbl">MIN</div></div>
+    <div class="sep">:</div>
+    <div class="t"><div class="tnum" id="secs">--</div><div class="tlbl">SEC</div></div>
+  </div>
+  <div class="total-days"><strong id="total-days">--</strong> days to go</div>
+  <div class="date-label">October 24, 2026</div>
+</div>
+
+<div class="sync-status" id="sync-status">Connecting…</div>
+
+<div class="section kavya">
+  <div class="section-header">
+    <div class="section-icon">🌸</div>
+    <div class="section-title">KAVYA'S LIST</div>
+    <div class="section-meta" id="meta-kavya"></div>
+  </div>
+  <div class="checklist" id="list-kavya"></div>
+  <div class="add-row">
+    <input type="text" id="input-kavya" placeholder="Add item…" />
+    <button class="add-btn" onclick="addItem('kavya')">+</button>
+  </div>
+</div>
+
+<div class="section pranav">
+  <div class="section-header">
+    <div class="section-icon">🎩</div>
+    <div class="section-title">PRANAV'S LIST</div>
+    <div class="section-meta" id="meta-pranav"></div>
+  </div>
+  <div class="checklist" id="list-pranav"></div>
+  <div class="add-row">
+    <input type="text" id="input-pranav" placeholder="Add item…" />
+    <button class="add-btn" onclick="addItem('pranav')">+</button>
+  </div>
+</div>
+
+<div class="section common">
+  <div class="section-header">
+    <div class="section-icon">💍</div>
+    <div class="section-title">COMMON LIST</div>
+    <div class="section-meta" id="meta-common"></div>
+  </div>
+  <div class="checklist" id="list-common"></div>
+  <div class="add-row">
+    <input type="text" id="input-common" placeholder="Add item…" />
+    <button class="add-btn" onclick="addItem('common')">+</button>
+  </div>
+</div>
+
+<!-- Firebase -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getDatabase, ref, onValue, set } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyBjEYNRVAqiJrX9ftevEZHr8RWaZ8THCW8",
+    authDomain: "wedding-ef509.firebaseapp.com",
+    databaseURL: "https://wedding-ef509-default-rtdb.firebaseio.com",
+    projectId: "wedding-ef509",
+    storageBucket: "wedding-ef509.firebasestorage.app",
+    messagingSenderId: "923678623454",
+    appId: "1:923678623454:web:9f1d139b7a569fc2a0a44f"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db  = getDatabase(app);
+
+  const LISTS = ['kavya', 'pranav', 'common'];
+  const state = { kavya: [], pranav: [], common: [] };
+
+  // ── SYNC STATUS ──
+  function setStatus(s) {
+    const el = document.getElementById('sync-status');
+    el.className = 'sync-status ' + s;
+    el.textContent = s === 'synced' ? '● Live — changes sync instantly' : s === 'syncing' ? '○ Saving\u2026' : '\u26a0 Connection error';
+  }
+
+  // ── DEBOUNCED SAVE — only pushes 800ms after last keystroke ──
+  const saveTimers = {};
+  function saveList(who) {
+    setStatus('syncing');
+    clearTimeout(saveTimers[who]);
+    saveTimers[who] = setTimeout(() => {
+      set(ref(db, 'lists/' + who), state[who])
+        .then(() => setStatus('synced'))
+        .catch(() => setStatus('error'));
+    }, 800);
+  }
+
+  // ── LISTEN — skip re-render if user is actively typing in this list ──
+  LISTS.forEach(who => {
+    onValue(ref(db, 'lists/' + who), snap => {
+      const active = document.activeElement;
+      const listEl = document.getElementById('list-' + who);
+      if (active && listEl && listEl.contains(active)) return;
+      state[who] = snap.val() || [];
+      render(who);
+      setStatus('synced');
+    });
+  });
+
+  // ── COUNTDOWN ──
+  function pad(n) { return String(Math.floor(n)).padStart(2, '0'); }
+  function tick() {
+    const now = new Date(), target = new Date('2026-10-24T00:00:00');
+    const diff = target - now; if (diff <= 0) return;
+    let months = (target.getFullYear()-now.getFullYear())*12 + (target.getMonth()-now.getMonth());
+    const after = new Date(now.getFullYear(), now.getMonth()+months, now.getDate());
+    if (after > target) { months--; after.setMonth(after.getMonth()-1); }
+    const remDays = Math.round((new Date(2026,9,24) - new Date(after.getFullYear(),after.getMonth(),after.getDate())) / 86400000);
+    const s = diff/1000;
+    document.getElementById('months').textContent     = pad(months);
+    document.getElementById('days').textContent       = pad(remDays);
+    document.getElementById('hrs').textContent        = pad((s%86400)/3600);
+    document.getElementById('mins').textContent       = pad((s%3600)/60);
+    document.getElementById('secs').textContent       = pad(s%60);
+    document.getElementById('total-days').textContent = Math.ceil(diff/86400000);
+  }
+  tick(); setInterval(tick, 1000);
+
+  // ── RENDER ──
+  function autoResize(ta) { ta.style.height='auto'; ta.style.height=ta.scrollHeight+'px'; }
+
+  function updateMeta(who) {
+    const items = state[who];
+    const total = items.reduce((a,it) => a+1+(it.subs?it.subs.length:0), 0);
+    const done  = items.reduce((a,it) => a+(it.done?1:0)+(it.subs?it.subs.filter(s=>s.done).length:0), 0);
+    document.getElementById('meta-'+who).textContent = total ? done+' / '+total+' done' : '';
+  }
+
+  function render(who) {
+    const items = state[who];
+    const list  = document.getElementById('list-'+who);
+    list.innerHTML = '';
+
+    items.forEach((item, i) => {
+      const wrap = document.createElement('div');
+      wrap.className = 'item-wrap';
+
+      wrap.appendChild(makeRow({
+        who, item, isSub: false,
+        onCheck: () => { state[who][i].done = !state[who][i].done; saveList(who); render(who); },
+        onEdit:  v  => { state[who][i].text = v; saveList(who); },
+        onDelete:()  => { state[who].splice(i,1); saveList(who); render(who); },
+        onEnter: ()  => {
+          if (!state[who][i].subs) state[who][i].subs = [];
+          state[who][i].subs.push({ text: '', done: false });
+          state[who].splice(i+1, 0, { text:'', done:false, subs:[] });
+          saveList(who); render(who);
+          setTimeout(() => {
+            const wraps = list.querySelectorAll('.item-wrap');
+            if (wraps[i]) {
+              const subs = wraps[i].querySelectorAll('.check-row.sub .item-label');
+              if (subs.length) subs[subs.length-1].focus();
+            }
+          }, 30);
+        }
+      }));
+
+      (item.subs||[]).forEach((sub, j) => {
+        wrap.appendChild(makeRow({
+          who, item: sub, isSub: true,
+          onCheck: () => { state[who][i].subs[j].done = !state[who][i].subs[j].done; saveList(who); render(who); },
+          onEdit:  v  => { state[who][i].subs[j].text = v; saveList(who); },
+          onDelete:()  => { state[who][i].subs.splice(j,1); saveList(who); render(who); },
+          onEnter: ()  => {
+            state[who][i].subs.splice(j+1, 0, { text:'', done:false });
+            saveList(who); render(who);
+            setTimeout(() => {
+              const wraps = list.querySelectorAll('.item-wrap');
+              if (wraps[i]) {
+                const subs = wraps[i].querySelectorAll('.check-row.sub .item-label');
+                if (subs[j+1]) subs[j+1].focus();
+              }
+            }, 30);
+          }
+        }));
+      });
+
+      list.appendChild(wrap);
+    });
+
+    updateMeta(who);
+  }
+
+  function makeRow({ who, item, isSub, onCheck, onEdit, onDelete, onEnter }) {
+    const row = document.createElement('div');
+    row.className = 'check-row'+(isSub?' sub':'')+(item.done?' done-row':'');
+
+    const cb = document.createElement('input');
+    cb.type = 'checkbox'; cb.checked = item.done; cb.onchange = onCheck;
+
+    const ta = document.createElement('textarea');
+    ta.className = 'item-label'+(item.done?' done-text':'');
+    ta.value = item.text; ta.rows = 1;
+    ta.placeholder = isSub ? 'Sub-item…' : 'Item…';
+    ta.addEventListener('input',   () => { autoResize(ta); onEdit(ta.value); });
+    ta.addEventListener('blur',    () => { onEdit(ta.value); });
+    ta.addEventListener('keydown', e => { if (e.key==='Enter') { e.preventDefault(); onEdit(ta.value); onEnter(ta); } });
+    setTimeout(() => autoResize(ta), 0);
+
+    const actions = document.createElement('div');
+    actions.className = 'row-actions';
+    const delBtn = document.createElement('button');
+    delBtn.className = 'icon-btn'; delBtn.textContent = '×'; delBtn.onclick = onDelete;
+    actions.appendChild(delBtn);
+
+    row.appendChild(cb); row.appendChild(ta); row.appendChild(actions);
+    return row;
+  }
+
+  // ── ADD ITEM ──
+  window.addItem = function(who) {
+    const input = document.getElementById('input-'+who);
+    const text  = input.value.trim(); if (!text) return;
+    state[who].push({ text, done:false, subs:[] });
+    saveList(who); render(who);
+    input.value = '';
+  };
+
+  LISTS.forEach(who => {
+    document.getElementById('input-'+who).addEventListener('keydown', e => {
+      if (e.key==='Enter') window.addItem(who);
+    });
+  });
+</script>
+</body>
+</html>
